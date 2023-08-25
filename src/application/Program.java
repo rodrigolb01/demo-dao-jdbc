@@ -2,6 +2,9 @@ package application;
 
 import java.util.Date;
 
+import model.dao.DaoFactory;
+import model.dao.DepartmentDao;
+import model.dao.SellerDao;
 import model.entities.Department;
 import model.entities.Seller;
 
@@ -14,6 +17,9 @@ public class Program {
 		
 		System.out.println(department1);
 		System.out.println(seller);
+		
+		SellerDao sellerDao = DaoFactory.createSellerDao();
+		DepartmentDao departmentDao = DaoFactory.createDepartmentDao();
 	}
 
 }
