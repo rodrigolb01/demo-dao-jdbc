@@ -69,8 +69,30 @@ public class SellerDaoJDBC implements SellerDao {
 
 	@Override
 	public List<Seller> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try {
+			st = conn.prepareStatement("SELECT seller.*, department.Name as DepName "
+					+ "FROM seller INNER JOIN department ON seller.DepartmentId = department.Id "
+					+ "ORDER BY Id");
+			
+			rs = st.executeQuery();
+			
+			List<Seller> sellers = new ArrayList<Seller>();
+			Department dep = null;
+			while(rs.next())
+			{
+				if(dep == null)
+					dep = instantiateDepartment(rs);
+				sellers.add(instantiateSeller(rs, dep));
+			}
+			
+			return sellers;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DbException(e.getMessage());
+		}
 	}
 
 	@Override
@@ -81,7 +103,7 @@ public class SellerDaoJDBC implements SellerDao {
 		try {
 			st = conn.prepareStatement("SELECT seller.*, department.Name as DepName "
 					+ "FROM seller INNER JOIN department ON seller.DepartmentId = department.Id "
-					+ "WHERE department.Id = ? " + "ORDER BY Name");
+					+ "WHERE department.Id = ? " + "ORDER BY Id");
 
 			st.setInt(1, department.getId());
 			rs = st.executeQuery();
@@ -99,8 +121,8 @@ public class SellerDaoJDBC implements SellerDao {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new DbException(e.getMessage());
 		}
-		return null;
 	}
 
 	private Department instantiateDepartment(ResultSet rs) throws SQLException {
