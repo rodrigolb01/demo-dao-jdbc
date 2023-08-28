@@ -25,6 +25,15 @@ public class Seller {
 		this.baseSalary = baseSalary;
 		this.department = department;
 	}
+	
+	public Seller(String name, String email, Date birthdate, double baseSalary, Department department) {
+		super();
+		this.name = name;
+		this.email = email;
+		this.birthdate = birthdate;
+		this.baseSalary = baseSalary;
+		this.department = department;
+	}
 
 	public int getId() {
 		return Id;

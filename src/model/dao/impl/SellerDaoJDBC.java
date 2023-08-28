@@ -1,9 +1,11 @@
 package model.dao.impl;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +25,46 @@ public class SellerDaoJDBC implements SellerDao {
 
 	@Override
 	public void insert(Seller seller) {
-
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+	    try {
+			st = conn.prepareStatement("INSERT INTO seller "
+					+ "(name, email, birthdate, basesalary, departmentid) "
+					+ "values(?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			
+			st.setString(1, seller.getName());
+			st.setString(2, seller.getEmail());
+			st.setDate(3, new java.sql.Date(seller.getBirthdate().getTime()));
+			st.setDouble(4, seller.getBaseSalary());
+			st.setInt(5, seller.getDepartment().getId());
+			
+			int rowsAffected = st.executeUpdate();
+			
+			if(rowsAffected > 0)
+			{
+				rs = st.getGeneratedKeys();
+				while(rs.next())
+				{
+					int id = rs.getInt(1);
+					seller.setId(id);
+					System.out.println("New entry inserted with Id " + id);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new DbException(e.getMessage());
+		}
+	    finally
+	    {
+	    	DB.closeStatement(st);
+	    	DB.closeResultSet(rs);
+	    }
+	}
+	
+	public void insertDepartment(Department department)
+	{
+		
 	}
 
 	@Override
@@ -61,7 +102,6 @@ public class SellerDaoJDBC implements SellerDao {
 			throw new DbException(e.getMessage());
 		} finally {
 			DB.closeStatement(st);
-			;
 			DB.closeResultSet(rs);
 		}
 		return null;
@@ -122,6 +162,11 @@ public class SellerDaoJDBC implements SellerDao {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new DbException(e.getMessage());
+		}
+		finally
+		{
+			DB.closeStatement(st);
+			DB.closeResultSet(rs);
 		}
 	}
 
