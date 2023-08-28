@@ -38,6 +38,8 @@ public class Program {
 			e.printStackTrace();
 			throw new DbException(e.getMessage());
 		}
+		
+		sellerDao.deleteById(13);
 	}
 
 }
