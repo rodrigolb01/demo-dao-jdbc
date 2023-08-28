@@ -31,9 +31,8 @@ public class Program {
 		
 		Department dep = new Department(2,"Electronics");
 		try {
-			Seller sel = new Seller("Albert Green", "albertgreen@gmail.com", sdf.parse("08/08/1990") ,180.0, dep);
-			sellerDao.insert(sel);
-			System.out.println("new seller id: " + sel.getId());
+			Seller sel = new Seller(13, "Albert Red", "albertred@gmail.com", sdf.parse("08/08/1990") ,230.0, dep);
+			sellerDao.update(sel);
 
 		} catch (ParseException e) {
 			e.printStackTrace();
